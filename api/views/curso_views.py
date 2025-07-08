@@ -5,7 +5,13 @@ from flask import request, make_response, jsonify
 from ..entidades import curso
 from ..services import curso_service
 
+# Rota Home
+class Home(Resource):
+    def get(self):
+        return make_response(jsonify("Hello World!"), 200)
+
 class CursoList(Resource):
+    # Listando cursos com o método - GET
     def get(self):
         cursos = curso_service.listar_cursos()
         # Validando e recuperando todos os registros com many=true
@@ -31,6 +37,7 @@ class CursoList(Resource):
 
 
 class CursoDetails(Resource):
+    # Buscando curso por ID com o método - GET
     def get(self, id):
         curso = curso_service.listar_curso_id(id)
         if curso is None:
@@ -38,7 +45,8 @@ class CursoDetails(Resource):
         
         cs = curso_schema.CursoSchema()
         return make_response(cs.jsonify(curso), 200)
-
+    
+    # Atualizando curso pelo ID com o método - PUT
     def put(self, id):
         curso_bd = curso_service.listar_curso_id(id)
         if curso_bd is None:
@@ -57,6 +65,7 @@ class CursoDetails(Resource):
             curso_atualizado = curso_service.listar_curso_id(id)
             return make_response(cs.jsonify(curso_atualizado), 200)
 
+    # Deletando curso com ID pelo método - DELETE
     def delete(self, id):
         curso_bd = curso_service.listar_curso_id(id)
         if curso_bd is None:
@@ -67,3 +76,4 @@ class CursoDetails(Resource):
 
 api.add_resource(CursoList, '/cursos')
 api.add_resource(CursoDetails, '/cursos/<int:id>')
+api.add_resource(Home, '/')
